@@ -23,22 +23,28 @@
   button{background:var(--pri);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600;}
   button:hover{background:var(--pri-d);}
   button:disabled{background:#aab4bd;cursor:not-allowed;}
-  #startScreen,#resultScreen{text-align:center;}
-  #resultScreen{display:none;}
+  #startScreen,#resultScreen,#lockScreen,#retryScreen{text-align:center;}
+  #resultScreen,#lockScreen,#retryScreen{display:none;}
   #quizBody{display:none;}
   .partlabel{font-size:1.05rem;font-weight:700;color:var(--pri-d);margin:22px 0 10px;border-left:4px solid var(--pri);padding-left:10px;}
   .score-box{font-size:1.3rem;font-weight:700;color:var(--pri-d);margin:12px 0;}
+  .score-box.fail{color:var(--bad);}
   .note{color:var(--muted);font-size:.9rem;}
-  .progress{color:var(--muted);font-size:.85rem;margin-top:-6px;margin-bottom:6px;}
+  .attempts{color:var(--muted);font-size:.85rem;margin-top:6px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>GS9 – Unit 1: Local Community – Test Collocation Thứ Năm (Bài 4/5, Tuần 1)</h1>
-  <div class="sub">Từ vựng số 52–68 · 30 câu (20 trắc nghiệm + 10 tự luận) · 10 phút · Không hiện đáp án</div>
+  <div class="sub">Từ vựng số 52–68 · 30 câu (20 trắc nghiệm + 10 tự luận) · 10 phút · Cần đúng ≥18/20 TN &amp; tối đa 1 câu sai TL để đạt</div>
+
+  <div id="lockScreen" class="card">
+    <h2>🔒 Bài chưa mở</h2>
+    <p id="lockMsg"></p>
+  </div>
 
   <div id="startScreen" class="card">
-    <p>Nhập tên của em để bắt đầu bài test (10 phút, 30 câu: 20 trắc nghiệm + 10 tự luận).</p>
+    <p>Nhập tên của em (đúng như trong danh sách lớp) để bắt đầu bài test (10 phút, 30 câu: 20 trắc nghiệm + 10 tự luận).</p>
     <input type="text" id="sname" placeholder="Họ và tên học sinh">
     <br><button onclick="startQuiz()">Bắt đầu làm bài</button>
   </div>
@@ -56,23 +62,73 @@
   </div>
 
   <div id="resultScreen" class="card">
-    <h2>Đã nộp bài!</h2>
+    <h2>✅ Đã nộp bài — Đạt yêu cầu!</h2>
     <div class="score-box" id="scoreLine"></div>
-    <p class="note">Kết quả chi tiết và đáp án sẽ được giáo viên công bố sau. Bài làm không hiển thị đáp án ngay.</p>
+    <p class="note">Kết quả đã được gửi cho giáo viên. Bài làm không hiển thị đáp án ngay.</p>
+    <div class="attempts" id="attemptsLine"></div>
+  </div>
+
+  <div id="retryScreen" class="card">
+    <h2>❌ Chưa đạt yêu cầu — Cần làm lại toàn bộ bài</h2>
+    <div class="score-box fail" id="retryScoreLine"></div>
+    <p class="note">Trắc nghiệm cần đúng tối thiểu 18/20 câu và tự luận tối đa sai 1 câu mới đạt yêu cầu.</p>
+    <div class="attempts" id="retryAttemptsLine"></div>
+    <button onclick="location.reload()">Làm lại bài</button>
   </div>
 </div>
 
 <script>
 const MC = [{"q": "Hoàn thành cụm collocation: \"_____ and responsible\"", "options": ["sort rubbish", "repair", "solve crimes", "hard-working"], "answer": "hard-working"}, {"q": "Hoàn thành cụm collocation: \"_____ goods\"", "options": ["responsible", "solve crimes", "deliver", "instruct"], "answer": "deliver"}, {"q": "Cụm collocation nào có nghĩa: \"nổi tiếng vì điều gì\"?", "options": ["prevent and solve crimes", "put rubbish in the bin", "protect the environment", "well known for something"], "answer": "well known for something"}, {"q": "Hoàn thành cụm collocation: \"keep _____\"", "options": ["law and order", "responsible", "hard-working", "deliver"], "answer": "law and order"}, {"q": "Hoàn thành cụm collocation: \"_____ (well known for something)\"", "options": ["advice", "obey the law", "deliver", "well-known"], "answer": "well-known"}, {"q": "Hoàn thành cụm collocation: \"_____ a season\"", "options": ["hard-working", "law and order", "bin", "symbolise"], "answer": "symbolise"}, {"q": "Hoàn thành cụm collocation: \"a _____ product\"", "options": ["original", "deliver", "advice", "world-famous"], "answer": "world-famous"}, {"q": "Cụm collocation nào có nghĩa: \"sửa dây điện\"?", "options": ["instruct people to do something", "obey the law", "a world-famous product", "repair electrical wires"], "answer": "repair electrical wires"}, {"q": "Hoàn thành cụm collocation: \"_____ electrical wires\"", "options": ["well-known", "responsible", "repair", "world-famous"], "answer": "repair"}, {"q": "Hoàn thành cụm collocation: \"_____\"", "options": ["original", "solve crimes", "uniform", "obey the law"], "answer": "obey the law"}, {"q": "Cụm collocation nào có nghĩa: \"giữ gìn luật pháp và trật tự\"?", "options": ["keep law and order", "well known for something", "put rubbish in the bin", "hard-working and responsible"], "answer": "keep law and order"}, {"q": "Hoàn thành cụm collocation: \"_____ the environment\"", "options": ["protect", "well-known", "law and order", "responsible"], "answer": "protect"}, {"q": "Hoàn thành cụm collocation: \"_____\"", "options": ["instruct", "obey the law", "sort rubbish", "deliver"], "answer": "sort rubbish"}, {"q": "Hoàn thành cụm collocation: \"prevent and _____\"", "options": ["symbolise", "solve crimes", "responsible", "uniform"], "answer": "solve crimes"}, {"q": "Hoàn thành cụm collocation: \"_____ techniques\"", "options": ["instruct", "advice", "original", "deliver"], "answer": "original"}, {"q": "Hoàn thành cụm collocation: \"wear a _____\"", "options": ["uniform", "obey the law", "repair", "well-known"], "answer": "uniform"}, {"q": "Hoàn thành cụm collocation: \"put rubbish in the _____\"", "options": ["bin", "deliver", "well-known", "advice"], "answer": "bin"}, {"q": "Hoàn thành cụm collocation: \"give useful _____\"", "options": ["responsible", "sort rubbish", "symbolise", "advice"], "answer": "advice"}, {"q": "Hoàn thành cụm collocation: \"_____ for something\"", "options": ["world-famous", "solve crimes", "symbolise", "responsible"], "answer": "responsible"}, {"q": "Hoàn thành cụm collocation: \"_____ people to do something\"", "options": ["advice", "well-known", "original", "instruct"], "answer": "instruct"}];
-const ESSAY = [{"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"hard-working\" (chăm chỉ và có trách nhiệm)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"sort rubbish\" (phân loại rác)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"responsible\" (có trách nhiệm với điều gì)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"original\" (kỹ thuật nguyên bản)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"obey the law\" (tuân thủ pháp luật)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"uniform\" (mặc đồng phục)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"deliver\" (giao hàng)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"repair\" (sửa dây điện)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"well-known\" (nổi tiếng vì điều gì)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"advice\" (cho lời khuyên hữu ích)."}];
+const ESSAY = [{"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"hard-working\" (chăm chỉ và có trách nhiệm).", "term": "hard-working"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"sort rubbish\" (phân loại rác).", "term": "sort rubbish"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"responsible\" (có trách nhiệm với điều gì).", "term": "responsible"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"original\" (kỹ thuật nguyên bản).", "term": "original"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"obey the law\" (tuân thủ pháp luật).", "term": "obey the law"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"uniform\" (mặc đồng phục).", "term": "uniform"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"deliver\" (giao hàng).", "term": "deliver"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"repair\" (sửa dây điện).", "term": "repair"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"well-known\" (nổi tiếng vì điều gì).", "term": "well-known"}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"advice\" (cho lời khuyên hữu ích).", "term": "advice"}];
+const DAY_NO = 4;
+const WEBAPP_URL = "PASTE_WEBAPP_URL_HERE";
+const UNIT_NAME = "Unit 1";
+const BAI_NAME = "Bai 4";
+
 let selected = new Array(MC.length).fill(null);
 let timeLeft = 600;
 let timerId = null;
 let submitted = false;
+let studentName = "";
+
+function todayStr(){ return new Date().toDateString(); }
+
+function checkLock(){
+  if(DAY_NO <= 1) return true;
+  const prevKey = 'gs9_u1_completed_test' + (DAY_NO - 1);
+  const prevDate = localStorage.getItem(prevKey);
+  const lockScreen = document.getElementById('lockScreen');
+  const lockMsg = document.getElementById('lockMsg');
+  if(!prevDate){
+    lockMsg.textContent = 'Em cần hoàn thành Bài ' + (DAY_NO - 1) + ' (đạt yêu cầu) trước khi làm bài này.';
+    lockScreen.style.display = 'block';
+    document.getElementById('startScreen').style.display = 'none';
+    return false;
+  }
+  if(prevDate === todayStr()){
+    lockMsg.textContent = 'Bài này sẽ mở vào ngày mai, sau khi em đã hoàn thành Bài ' + (DAY_NO - 1) + ' hôm nay.';
+    lockScreen.style.display = 'block';
+    document.getElementById('startScreen').style.display = 'none';
+    return false;
+  }
+  return true;
+}
+
+function getAttempts(name){
+  const key = 'gs9_u1_attempts_test' + DAY_NO + '_' + name;
+  return parseInt(localStorage.getItem(key) || '0', 10);
+}
+function incAttempts(name){
+  const key = 'gs9_u1_attempts_test' + DAY_NO + '_' + name;
+  const n = getAttempts(name) + 1;
+  localStorage.setItem(key, n);
+  return n;
+}
 
 function startQuiz(){
   const name = document.getElementById('sname').value.trim();
   if(!name){ alert('Vui lòng nhập tên trước khi bắt đầu.'); return; }
+  studentName = name;
   document.getElementById('startScreen').style.display='none';
   document.getElementById('timer').style.display='block';
   document.getElementById('quizBody').style.display='block';
@@ -92,6 +148,7 @@ function tick(){
 
 function renderMC(){
   const c = document.getElementById('mcContainer');
+  c.innerHTML = '';
   MC.forEach((q,i)=>{
     const div = document.createElement('div');
     div.className='card';
@@ -113,6 +170,7 @@ function choose(i,j){
 
 function renderEssay(){
   const c = document.getElementById('essayContainer');
+  c.innerHTML = '';
   ESSAY.forEach((q,i)=>{
     const div = document.createElement('div');
     div.className='card';
@@ -121,27 +179,71 @@ function renderEssay(){
   });
 }
 
+function normalize(s){
+  return (s||'').toLowerCase().normalize('NFC');
+}
+
 function submitQuiz(){
   if(submitted) return;
   submitted = true;
   clearInterval(timerId);
-  let correct=0, answeredMC=0;
+
+  let correctMC=0, answeredMC=0;
   MC.forEach((q,i)=>{
     if(selected[i]!==null){
       answeredMC++;
-      if(q.options[selected[i]]===q.answer) correct++;
+      if(q.options[selected[i]]===q.answer) correctMC++;
     }
   });
-  let answeredEssay=0;
+
+  let correctEssay=0, answeredEssay=0;
   ESSAY.forEach((q,i)=>{
     const v = document.getElementById('essay-'+i);
-    if(v && v.value.trim().length>0) answeredEssay++;
+    const txt = normalize(v ? v.value : '');
+    if(txt.trim().length>0) answeredEssay++;
+    if(txt.includes(normalize(q.term))) correctEssay++;
   });
+
+  const attempts = incAttempts(studentName);
+  const passed = (correctMC >= 18) && (correctEssay >= 9);
+
+  // Gửi kết quả về hệ thống của giáo viên (Google Sheet + email)
+  if(WEBAPP_URL && WEBAPP_URL.indexOf('http') === 0){
+    fetch(WEBAPP_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({
+        hocSinh: studentName,
+        unit: UNIT_NAME,
+        bai: BAI_NAME,
+        diemTN: correctMC,
+        diemTL: correctEssay,
+        datYeuCau: passed,
+        lanLamLai: attempts
+      })
+    }).catch(()=>{});
+  }
+
   document.getElementById('quizBody').style.display='none';
   document.getElementById('timer').style.display='none';
-  document.getElementById('resultScreen').style.display='block';
-  document.getElementById('scoreLine').innerHTML =
-    `Trắc nghiệm: đã làm ${answeredMC}/20 câu — đúng ${correct}/20 câu<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
+
+  if(passed){
+    localStorage.setItem('gs9_u1_completed_test' + DAY_NO, todayStr());
+    document.getElementById('resultScreen').style.display='block';
+    document.getElementById('scoreLine').innerHTML =
+      `Trắc nghiệm: đúng ${correctMC}/20 câu (đã làm ${answeredMC}/20)<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
+    document.getElementById('attemptsLine').textContent = 'Số lần làm bài: ' + attempts;
+  } else {
+    document.getElementById('retryScreen').style.display='block';
+    document.getElementById('retryScoreLine').innerHTML =
+      `Trắc nghiệm: đúng ${correctMC}/20 câu (cần ≥18)<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
+    document.getElementById('retryAttemptsLine').textContent = 'Số lần đã làm: ' + attempts;
+  }
+}
+
+if(checkLock()){
+  // start screen stays visible (default)
 }
 </script>
 </body>
