@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GS9 – Unit 1: Local Community – Test Collocation Thứ Ba (Bài 2/5, Tuần 1)</title>
+<style>
+  :root{--pri:#2c5f8a;--pri-d:#1d4266;--bg:#f4f7fa;--card:#ffffff;--ok:#229954;--bad:#c0392b;--muted:#6b7785;}
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);margin:0;padding:20px;color:#222;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{color:var(--pri-d);font-size:1.4rem;margin-bottom:4px;}
+  .sub{color:var(--muted);margin-bottom:18px;font-size:.95rem;}
+  .card{background:var(--card);border-radius:10px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  #timer{position:sticky;top:0;z-index:10;background:var(--pri);color:#fff;text-align:center;padding:10px;border-radius:8px;font-size:1.2rem;font-weight:700;margin-bottom:16px;letter-spacing:1px;}
+  #timer.warn{background:var(--bad);}
+  .qnum{font-weight:700;color:var(--pri-d);margin-bottom:8px;}
+  .opt{display:block;padding:9px 12px;margin:6px 0;border:1px solid #dde3ea;border-radius:7px;cursor:pointer;transition:.15s;}
+  .opt:hover{background:#eef4fa;}
+  .opt.selected{background:var(--pri);color:#fff;border-color:var(--pri);}
+  textarea{width:100%;min-height:70px;border:1px solid #dde3ea;border-radius:7px;padding:10px;font-family:inherit;font-size:.95rem;resize:vertical;}
+  input#sname{width:100%;padding:10px;border:1px solid #dde3ea;border-radius:7px;font-size:1rem;margin-bottom:10px;}
+  button{background:var(--pri);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600;}
+  button:hover{background:var(--pri-d);}
+  button:disabled{background:#aab4bd;cursor:not-allowed;}
+  #startScreen,#resultScreen{text-align:center;}
+  #resultScreen{display:none;}
+  #quizBody{display:none;}
+  .partlabel{font-size:1.05rem;font-weight:700;color:var(--pri-d);margin:22px 0 10px;border-left:4px solid var(--pri);padding-left:10px;}
+  .score-box{font-size:1.3rem;font-weight:700;color:var(--pri-d);margin:12px 0;}
+  .note{color:var(--muted);font-size:.9rem;}
+  .progress{color:var(--muted);font-size:.85rem;margin-top:-6px;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>GS9 – Unit 1: Local Community – Test Collocation Thứ Ba (Bài 2/5, Tuần 1)</h1>
+  <div class="sub">Từ vựng số 18–34 · 30 câu (20 trắc nghiệm + 10 tự luận) · 10 phút · Không hiện đáp án</div>
+
+  <div id="startScreen" class="card">
+    <p>Nhập tên của em để bắt đầu bài test (10 phút, 30 câu: 20 trắc nghiệm + 10 tự luận).</p>
+    <input type="text" id="sname" placeholder="Họ và tên học sinh">
+    <br><button onclick="startQuiz()">Bắt đầu làm bài</button>
+  </div>
+
+  <div id="timer" style="display:none;">10:00</div>
+
+  <div id="quizBody">
+    <div class="partlabel">PHẦN A – TRẮC NGHIỆM (20 câu)</div>
+    <div id="mcContainer"></div>
+    <div class="partlabel">PHẦN B – TỰ LUẬN (10 câu)</div>
+    <div id="essayContainer"></div>
+    <div class="card" style="text-align:center;">
+      <button onclick="submitQuiz()">Nộp bài</button>
+    </div>
+  </div>
+
+  <div id="resultScreen" class="card">
+    <h2>Đã nộp bài!</h2>
+    <div class="score-box" id="scoreLine"></div>
+    <p class="note">Kết quả chi tiết và đáp án sẽ được giáo viên công bố sau. Bài làm không hiển thị đáp án ngay.</p>
+  </div>
+</div>
+
+<script>
+const MC = [{"q": "Hoàn thành cụm collocation: \"made from _____\"", "options": ["conical hat", "clay", "weaving", "bamboo"], "answer": "clay"}, {"q": "Hoàn thành cụm collocation: \"take care of a _____'s pet\"", "options": ["flower vase", "neighbour", "weaving", "handicraft"], "answer": "neighbour"}, {"q": "Hoàn thành cụm collocation: \"skilled local _____s\"", "options": ["souvenir", "artisan", "conical hat", "spring rolls"], "answer": "artisan"}, {"q": "Hoàn thành cụm collocation: \"a speciality: _____\"", "options": ["firefighter", "souvenir", "sticky rice flakes", "neighbour"], "answer": "sticky rice flakes"}, {"q": "Cụm collocation nào có nghĩa: \"đặc sản: cốm\"?", "options": ["a delivery person delivers goods", "a speciality: sticky rice flakes", "made from clay", "make pottery"], "answer": "a speciality: sticky rice flakes"}, {"q": "Hoàn thành cụm collocation: \"famous _____\"", "options": ["speciality food", "clay", "lantern", "spring rolls"], "answer": "speciality food"}, {"q": "Hoàn thành cụm collocation: \"preserve _____ techniques\"", "options": ["handicraft", "speciality food", "bamboo", "weaving"], "answer": "weaving"}, {"q": "Hoàn thành cụm collocation: \"a favourite speciality food: _____\"", "options": ["lantern", "neighbour", "speciality food", "spring rolls"], "answer": "spring rolls"}, {"q": "Hoàn thành cụm collocation: \"a _____ puts out fires\"", "options": ["clay", "firefighter", "neighbour", "sticky rice flakes"], "answer": "firefighter"}, {"q": "Hoàn thành cụm collocation: \"a _____ delivers goods\"", "options": ["pottery", "clay", "speciality food", "delivery person"], "answer": "delivery person"}, {"q": "Hoàn thành cụm collocation: \"make _____\"", "options": ["delivery person", "pottery", "lantern", "firefighter"], "answer": "pottery"}, {"q": "Cụm collocation nào có nghĩa: \"nghệ nhân địa phương lành nghề\"?", "options": ["skilled local artisans", "a speciality: sticky rice flakes", "buy souvenirs", "a delivery person delivers goods"], "answer": "skilled local artisans"}, {"q": "Hoàn thành cụm collocation: \"make _____s\"", "options": ["flower vase", "speciality food", "artisan", "delivery person"], "answer": "flower vase"}, {"q": "Hoàn thành cụm collocation: \"buy a _____ bed\"", "options": ["conical hat", "speciality food", "pottery", "bamboo"], "answer": "bamboo"}, {"q": "Cụm collocation nào có nghĩa: \"làng nổi tiếng với nón lá\"?", "options": ["a village famous for conical hats", "skilled local artisans", "famous speciality food", "a favourite speciality food: spring rolls"], "answer": "a village famous for conical hats"}, {"q": "Hoàn thành cụm collocation: \"buy traditional _____s\"", "options": ["souvenir", "neighbour", "handicraft", "lantern"], "answer": "handicraft"}, {"q": "Hoàn thành cụm collocation: \"famous for _____s\"", "options": ["conical hat", "paper fan", "pottery", "handicraft"], "answer": "paper fan"}, {"q": "Hoàn thành cụm collocation: \"buy _____s as souvenirs\"", "options": ["neighbour", "spring rolls", "delivery person", "lantern"], "answer": "lantern"}, {"q": "Hoàn thành cụm collocation: \"a village famous for _____s\"", "options": ["sticky rice flakes", "weaving", "neighbour", "conical hat"], "answer": "conical hat"}, {"q": "Hoàn thành cụm collocation: \"buy _____s\"", "options": ["speciality food", "souvenir", "delivery person", "paper fan"], "answer": "souvenir"}];
+const ESSAY = [{"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"spring rolls\" (đặc sản yêu thích: chả giò)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"paper fan\" (nổi tiếng với quạt giấy)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"souvenir\" (mua quà lưu niệm)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"firefighter\" (lính cứu hỏa dập lửa)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"flower vase\" (làm bình hoa)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"clay\" (làm từ đất sét)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"speciality food\" (đặc sản nổi tiếng)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"conical hat\" (làng nổi tiếng với nón lá)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"bamboo\" (mua giường tre)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"handicraft\" (mua đồ thủ công truyền thống)."}];
+let selected = new Array(MC.length).fill(null);
+let timeLeft = 600;
+let timerId = null;
+let submitted = false;
+
+function startQuiz(){
+  const name = document.getElementById('sname').value.trim();
+  if(!name){ alert('Vui lòng nhập tên trước khi bắt đầu.'); return; }
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('timer').style.display='block';
+  document.getElementById('quizBody').style.display='block';
+  renderMC();
+  renderEssay();
+  timerId = setInterval(tick, 1000);
+}
+
+function tick(){
+  timeLeft--;
+  const m = Math.floor(timeLeft/60), s = timeLeft%60;
+  const el = document.getElementById('timer');
+  el.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  if(timeLeft<=60) el.classList.add('warn');
+  if(timeLeft<=0){ clearInterval(timerId); submitQuiz(); }
+}
+
+function renderMC(){
+  const c = document.getElementById('mcContainer');
+  MC.forEach((q,i)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    let optsHtml='';
+    q.options.forEach((opt,j)=>{
+      optsHtml += `<div class="opt" id="opt-${i}-${j}" onclick="choose(${i},${j})">${opt}</div>`;
+    });
+    div.innerHTML = `<div class="qnum">Câu ${i+1}. ${q.q}</div>${optsHtml}`;
+    c.appendChild(div);
+  });
+}
+
+function choose(i,j){
+  if(submitted) return;
+  selected[i]=j;
+  document.querySelectorAll(`[id^="opt-${i}-"]`).forEach(el=>el.classList.remove('selected'));
+  document.getElementById(`opt-${i}-${j}`).classList.add('selected');
+}
+
+function renderEssay(){
+  const c = document.getElementById('essayContainer');
+  ESSAY.forEach((q,i)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `<div class="qnum">Câu ${21+i}. ${q.q}</div><textarea id="essay-${i}" placeholder="Viết câu trả lời tại đây..."></textarea>`;
+    c.appendChild(div);
+  });
+}
+
+function submitQuiz(){
+  if(submitted) return;
+  submitted = true;
+  clearInterval(timerId);
+  let correct=0, answeredMC=0;
+  MC.forEach((q,i)=>{
+    if(selected[i]!==null){
+      answeredMC++;
+      if(q.options[selected[i]]===q.answer) correct++;
+    }
+  });
+  let answeredEssay=0;
+  ESSAY.forEach((q,i)=>{
+    const v = document.getElementById('essay-'+i);
+    if(v && v.value.trim().length>0) answeredEssay++;
+  });
+  document.getElementById('quizBody').style.display='none';
+  document.getElementById('timer').style.display='none';
+  document.getElementById('resultScreen').style.display='block';
+  document.getElementById('scoreLine').innerHTML =
+    `Trắc nghiệm: đã làm ${answeredMC}/20 câu — đúng ${correct}/20 câu<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
+}
+</script>
+</body>
+</html>
