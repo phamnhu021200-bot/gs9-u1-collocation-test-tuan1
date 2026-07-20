@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GS9 – Unit 1: Local Community – Test Collocation Thứ Tư (Bài 3/5, Tuần 1)</title>
+<style>
+  :root{--pri:#2c5f8a;--pri-d:#1d4266;--bg:#f4f7fa;--card:#ffffff;--ok:#229954;--bad:#c0392b;--muted:#6b7785;}
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);margin:0;padding:20px;color:#222;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{color:var(--pri-d);font-size:1.4rem;margin-bottom:4px;}
+  .sub{color:var(--muted);margin-bottom:18px;font-size:.95rem;}
+  .card{background:var(--card);border-radius:10px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  #timer{position:sticky;top:0;z-index:10;background:var(--pri);color:#fff;text-align:center;padding:10px;border-radius:8px;font-size:1.2rem;font-weight:700;margin-bottom:16px;letter-spacing:1px;}
+  #timer.warn{background:var(--bad);}
+  .qnum{font-weight:700;color:var(--pri-d);margin-bottom:8px;}
+  .opt{display:block;padding:9px 12px;margin:6px 0;border:1px solid #dde3ea;border-radius:7px;cursor:pointer;transition:.15s;}
+  .opt:hover{background:#eef4fa;}
+  .opt.selected{background:var(--pri);color:#fff;border-color:var(--pri);}
+  textarea{width:100%;min-height:70px;border:1px solid #dde3ea;border-radius:7px;padding:10px;font-family:inherit;font-size:.95rem;resize:vertical;}
+  input#sname{width:100%;padding:10px;border:1px solid #dde3ea;border-radius:7px;font-size:1rem;margin-bottom:10px;}
+  button{background:var(--pri);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600;}
+  button:hover{background:var(--pri-d);}
+  button:disabled{background:#aab4bd;cursor:not-allowed;}
+  #startScreen,#resultScreen{text-align:center;}
+  #resultScreen{display:none;}
+  #quizBody{display:none;}
+  .partlabel{font-size:1.05rem;font-weight:700;color:var(--pri-d);margin:22px 0 10px;border-left:4px solid var(--pri);padding-left:10px;}
+  .score-box{font-size:1.3rem;font-weight:700;color:var(--pri-d);margin:12px 0;}
+  .note{color:var(--muted);font-size:.9rem;}
+  .progress{color:var(--muted);font-size:.85rem;margin-top:-6px;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>GS9 – Unit 1: Local Community – Test Collocation Thứ Tư (Bài 3/5, Tuần 1)</h1>
+  <div class="sub">Từ vựng số 35–51 · 30 câu (20 trắc nghiệm + 10 tự luận) · 10 phút · Không hiện đáp án</div>
+
+  <div id="startScreen" class="card">
+    <p>Nhập tên của em để bắt đầu bài test (10 phút, 30 câu: 20 trắc nghiệm + 10 tự luận).</p>
+    <input type="text" id="sname" placeholder="Họ và tên học sinh">
+    <br><button onclick="startQuiz()">Bắt đầu làm bài</button>
+  </div>
+
+  <div id="timer" style="display:none;">10:00</div>
+
+  <div id="quizBody">
+    <div class="partlabel">PHẦN A – TRẮC NGHIỆM (20 câu)</div>
+    <div id="mcContainer"></div>
+    <div class="partlabel">PHẦN B – TỰ LUẬN (10 câu)</div>
+    <div id="essayContainer"></div>
+    <div class="card" style="text-align:center;">
+      <button onclick="submitQuiz()">Nộp bài</button>
+    </div>
+  </div>
+
+  <div id="resultScreen" class="card">
+    <h2>Đã nộp bài!</h2>
+    <div class="score-box" id="scoreLine"></div>
+    <p class="note">Kết quả chi tiết và đáp án sẽ được giáo viên công bố sau. Bài làm không hiển thị đáp án ngay.</p>
+  </div>
+</div>
+
+<script>
+const MC = [{"q": "Hoàn thành cụm collocation: \"traditional _____s\"", "options": ["electrical wires", "rubbish", "technique", "generation"], "answer": "technique"}, {"q": "Hoàn thành cụm collocation: \"_____ the process\"", "options": ["function", "shorten", "rubbish", "goods"], "answer": "shorten"}, {"q": "Hoàn thành cụm collocation: \"beauty and _____\"", "options": ["house-warming party", "purpose", "consumer", "function"], "answer": "function"}, {"q": "Hoàn thành cụm collocation: \"two _____s of leaves\"", "options": ["generation", "house-warming party", "layer", "property"], "answer": "layer"}, {"q": "Hoàn thành cụm collocation: \"give sth at a _____\"", "options": ["water bill", "house-warming party", "wrap", "consumer"], "answer": "house-warming party"}, {"q": "Hoàn thành cụm collocation: \"_____ a technique\"", "options": ["rubbish", "preserve", "fragrance", "technique"], "answer": "preserve"}, {"q": "Hoàn thành cụm collocation: \"sell to _____s\"", "options": ["function", "consumer", "fragrance", "shorten"], "answer": "consumer"}, {"q": "Hoàn thành cụm collocation: \"sort _____\"", "options": ["consumer", "rubbish", "water bill", "shorten"], "answer": "rubbish"}, {"q": "Cụm collocation nào có nghĩa: \"bảo vệ người dân và tài sản\"?", "options": ["go for a health check-up", "wrap the product in leaves", "protect people and property", "beauty and function"], "answer": "protect people and property"}, {"q": "Cụm collocation nào có nghĩa: \"bảo tồn kỹ thuật\"?", "options": ["protect people and property", "beauty and function", "pass down through generations", "preserve a technique"], "answer": "preserve a technique"}, {"q": "Hoàn thành cụm collocation: \"_____ the product in leaves\"", "options": ["layer", "health check-up", "wrap", "rubbish"], "answer": "wrap"}, {"q": "Hoàn thành cụm collocation: \"go for a _____\"", "options": ["health check-up", "preserve", "wrap", "house-warming party"], "answer": "health check-up"}, {"q": "Hoàn thành cụm collocation: \"repair _____\"", "options": ["layer", "preserve", "electrical wires", "technique"], "answer": "electrical wires"}, {"q": "Hoàn thành cụm collocation: \"deliver _____\"", "options": ["goods", "preserve", "property", "shorten"], "answer": "goods"}, {"q": "Hoàn thành cụm collocation: \"protect people and _____\"", "options": ["technique", "property", "fragrance", "rubbish"], "answer": "property"}, {"q": "Hoàn thành cụm collocation: \"pay the _____\"", "options": ["goods", "rubbish", "technique", "water bill"], "answer": "water bill"}, {"q": "Hoàn thành cụm collocation: \"for a particular _____\"", "options": ["purpose", "technique", "house-warming party", "shorten"], "answer": "purpose"}, {"q": "Hoàn thành cụm collocation: \"a special _____\"", "options": ["fragrance", "preserve", "generation", "rubbish"], "answer": "fragrance"}, {"q": "Cụm collocation nào có nghĩa: \"sửa dây điện\"?", "options": ["preserve a technique", "give sth at a house-warming party", "repair electrical wires", "sell to consumers"], "answer": "repair electrical wires"}, {"q": "Hoàn thành cụm collocation: \"pass down through _____s\"", "options": ["layer", "health check-up", "generation", "shorten"], "answer": "generation"}];
+const ESSAY = [{"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"generation\" (truyền qua nhiều thế hệ)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"health check-up\" (đi khám sức khỏe)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"preserve\" (bảo tồn kỹ thuật)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"purpose\" (cho một mục đích cụ thể)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"function\" (vẻ đẹp và công dụng)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"fragrance\" (hương thơm đặc biệt)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"house-warming party\" (tặng gì đó tại tiệc tân gia)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"shorten\" (rút ngắn quy trình)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"wrap\" (gói sản phẩm trong lá)."}, {"q": "Viết 1 câu tiếng Anh có sử dụng cụm từ liên quan đến \"water bill\" (trả hóa đơn tiền nước)."}];
+let selected = new Array(MC.length).fill(null);
+let timeLeft = 600;
+let timerId = null;
+let submitted = false;
+
+function startQuiz(){
+  const name = document.getElementById('sname').value.trim();
+  if(!name){ alert('Vui lòng nhập tên trước khi bắt đầu.'); return; }
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('timer').style.display='block';
+  document.getElementById('quizBody').style.display='block';
+  renderMC();
+  renderEssay();
+  timerId = setInterval(tick, 1000);
+}
+
+function tick(){
+  timeLeft--;
+  const m = Math.floor(timeLeft/60), s = timeLeft%60;
+  const el = document.getElementById('timer');
+  el.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  if(timeLeft<=60) el.classList.add('warn');
+  if(timeLeft<=0){ clearInterval(timerId); submitQuiz(); }
+}
+
+function renderMC(){
+  const c = document.getElementById('mcContainer');
+  MC.forEach((q,i)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    let optsHtml='';
+    q.options.forEach((opt,j)=>{
+      optsHtml += `<div class="opt" id="opt-${i}-${j}" onclick="choose(${i},${j})">${opt}</div>`;
+    });
+    div.innerHTML = `<div class="qnum">Câu ${i+1}. ${q.q}</div>${optsHtml}`;
+    c.appendChild(div);
+  });
+}
+
+function choose(i,j){
+  if(submitted) return;
+  selected[i]=j;
+  document.querySelectorAll(`[id^="opt-${i}-"]`).forEach(el=>el.classList.remove('selected'));
+  document.getElementById(`opt-${i}-${j}`).classList.add('selected');
+}
+
+function renderEssay(){
+  const c = document.getElementById('essayContainer');
+  ESSAY.forEach((q,i)=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `<div class="qnum">Câu ${21+i}. ${q.q}</div><textarea id="essay-${i}" placeholder="Viết câu trả lời tại đây..."></textarea>`;
+    c.appendChild(div);
+  });
+}
+
+function submitQuiz(){
+  if(submitted) return;
+  submitted = true;
+  clearInterval(timerId);
+  let correct=0, answeredMC=0;
+  MC.forEach((q,i)=>{
+    if(selected[i]!==null){
+      answeredMC++;
+      if(q.options[selected[i]]===q.answer) correct++;
+    }
+  });
+  let answeredEssay=0;
+  ESSAY.forEach((q,i)=>{
+    const v = document.getElementById('essay-'+i);
+    if(v && v.value.trim().length>0) answeredEssay++;
+  });
+  document.getElementById('quizBody').style.display='none';
+  document.getElementById('timer').style.display='none';
+  document.getElementById('resultScreen').style.display='block';
+  document.getElementById('scoreLine').innerHTML =
+    `Trắc nghiệm: đã làm ${answeredMC}/20 câu — đúng ${correct}/20 câu<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
+}
+</script>
+</body>
+</html>
