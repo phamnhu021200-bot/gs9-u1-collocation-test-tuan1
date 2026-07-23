@@ -5,75 +5,150 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GS9 – Unit 1: Local Community – Test Collocation Thứ Hai (Bài 1/5, Tuần 1)</title>
 <style>
-  :root{--pri:#2c5f8a;--pri-d:#1d4266;--bg:#f4f7fa;--card:#ffffff;--ok:#229954;--bad:#c0392b;--muted:#6b7785;}
+  :root{
+    --bg:#0f172a; --card:#1e293b; --accent:#38bdf8; --accent2:#22c55e;
+    --text:#e2e8f0; --muted:#94a3b8; --danger:#ef4444; --warn:#f59e0b;
+  }
   *{box-sizing:border-box;}
-  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);margin:0;padding:20px;color:#222;}
+  body{
+    margin:0; font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+    background:linear-gradient(180deg,#0f172a,#1e293b);
+    color:var(--text); min-height:100vh; padding:20px;
+  }
   .wrap{max-width:760px;margin:0 auto;}
-  h1{color:var(--pri-d);font-size:1.4rem;margin-bottom:4px;}
-  .sub{color:var(--muted);margin-bottom:18px;font-size:.95rem;}
-  .card{background:var(--card);border-radius:10px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
-  #timer{position:sticky;top:0;z-index:10;background:var(--pri);color:#fff;text-align:center;padding:10px;border-radius:8px;font-size:1.2rem;font-weight:700;margin-bottom:16px;letter-spacing:1px;}
-  #timer.warn{background:var(--bad);}
-  .qnum{font-weight:700;color:var(--pri-d);margin-bottom:8px;}
-  .opt{display:block;padding:9px 12px;margin:6px 0;border:1px solid #dde3ea;border-radius:7px;cursor:pointer;transition:.15s;}
-  .opt:hover{background:#eef4fa;}
-  .opt.selected{background:var(--pri);color:#fff;border-color:var(--pri);}
-  textarea{width:100%;min-height:70px;border:1px solid #dde3ea;border-radius:7px;padding:10px;font-family:inherit;font-size:.95rem;resize:vertical;}
-  input#sname{width:100%;padding:10px;border:1px solid #dde3ea;border-radius:7px;font-size:1rem;margin-bottom:10px;}
-  button{background:var(--pri);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600;}
-  button:hover{background:var(--pri-d);}
-  button:disabled{background:#aab4bd;cursor:not-allowed;}
-  #startScreen,#resultScreen,#lockScreen,#retryScreen{text-align:center;}
-  #resultScreen,#lockScreen,#retryScreen{display:none;}
-  #quizBody{display:none;}
-  .partlabel{font-size:1.05rem;font-weight:700;color:var(--pri-d);margin:22px 0 10px;border-left:4px solid var(--pri);padding-left:10px;}
-  .score-box{font-size:1.3rem;font-weight:700;color:var(--pri-d);margin:12px 0;}
-  .score-box.fail{color:var(--bad);}
+  header{
+    background:var(--card); border-radius:16px; padding:20px 24px;
+    margin-bottom:18px; box-shadow:0 4px 20px rgba(0,0,0,.3);
+    display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;
+    position:sticky; top:10px; z-index:20;
+  }
+  header h1{font-size:1.15rem;margin:0 0 6px;color:var(--text);}
+  header p{margin:0;color:var(--muted);font-size:.85rem;}
+  #timer{
+    font-size:1.4rem;font-weight:700;color:var(--accent);
+    background:#0f172a;padding:8px 16px;border-radius:10px;min-width:90px;text-align:center;
+  }
+  #timer.danger{color:var(--danger);}
+  .card{
+    background:var(--card);border-radius:16px;padding:22px 24px;margin-bottom:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,.25);
+  }
+  .qtopic{color:var(--accent);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .qtext{font-size:1.05rem;margin-bottom:14px;line-height:1.5;}
+  .qtext b{color:var(--accent);}
+  .options{display:grid;gap:10px;}
+  .opt{
+    display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;
+    background:#0f172a;border:2px solid #334155;cursor:pointer;transition:.15s;
+  }
+  .opt:hover{border-color:var(--accent);}
+  .opt.selected{border-color:var(--accent);background:#0c4a6e;}
+  .opt .letter{
+    width:26px;height:26px;border-radius:50%;background:#334155;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;
+  }
+  .opt.selected .letter{background:var(--accent);color:#0f172a;}
+  textarea{
+    width:100%;min-height:90px;border:2px solid #334155;border-radius:10px;padding:12px 14px;
+    font-family:inherit;font-size:.95rem;resize:vertical;background:#0f172a;color:var(--text);
+  }
+  textarea:focus{outline:none;border-color:var(--accent);}
+  #login-card label{display:block;margin:10px 0 6px;color:var(--muted);font-size:.9rem;}
+  #login-card input{
+    width:100%;padding:12px 14px;border-radius:10px;border:2px solid #334155;
+    background:#0f172a;color:var(--text);font-size:1rem;
+  }
+  #login-card input:focus{outline:none;border-color:var(--accent);}
+  .btn{
+    display:inline-block;padding:13px 26px;border-radius:10px;border:none;
+    background:var(--accent);color:#0f172a;font-weight:700;font-size:1rem;cursor:pointer;
+    margin-top:16px;transition:.15s;
+  }
+  .btn:hover{background:#0ea5e9;}
+  .btn:disabled{background:#334155;color:var(--muted);cursor:not-allowed;}
+  .btn-secondary{background:#334155;color:var(--text);}
+  .btn-submit{background:var(--accent2);color:#062e17;width:100%;font-size:1.05rem;}
+  .btn-submit:hover{background:#16a34a;}
+  .nav-row{display:flex;justify-content:space-between;gap:10px;margin-top:8px;}
+  .progress-wrap{background:#0f172a;border-radius:8px;height:8px;overflow:hidden;margin:14px 0;}
+  .progress-bar{height:100%;background:var(--accent2);transition:.2s;width:0%;}
+  .progress-label{color:var(--muted);font-size:.8rem;margin-bottom:2px;}
+  .grid-nav{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:16px 0;}
+  .grid-nav div{
+    aspect-ratio:1;border-radius:6px;background:#334155;color:var(--muted);
+    display:flex;align-items:center;justify-content:center;font-size:.75rem;cursor:pointer;
+  }
+  .grid-nav div.done{background:var(--accent2);color:#0f172a;font-weight:700;}
+  .grid-nav div.current{outline:2px solid var(--accent);}
+  #resultScreen,#retryScreen{text-align:center;}
+  .score-box{font-size:3rem;font-weight:800;color:var(--accent2);margin:10px 0;}
+  .score-box.fail{color:var(--danger);}
+  .status{font-size:1.2rem;font-weight:700;margin-bottom:14px;}
+  .status.pass{color:var(--accent2);}
+  .status.fail{color:var(--danger);}
   .note{color:var(--muted);font-size:.9rem;}
   .attempts{color:var(--muted);font-size:.85rem;margin-top:6px;}
+  .hidden{display:none !important;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>GS9 – Unit 1: Local Community – Test Collocation Thứ Hai (Bài 1/5, Tuần 1)</h1>
-  <div class="sub">Từ vựng số 1–17 · 30 câu (20 trắc nghiệm + 10 tự luận) · 10 phút · Cần đúng ≥18/20 TN &amp; tối đa 1 câu sai TL để đạt</div>
+  <header>
+    <div>
+      <h1>GS9 – Unit 1: Local Community – Test Collocation Thứ Hai (Bài 1/5, Tuần 1)</h1>
+      <p>Từ vựng số 1–17 · 30 câu (20 trắc nghiệm + 10 tự luận) · 10 phút · Cần đúng ≥18/20 TN &amp; tối đa 1 câu sai TL để đạt</p>
+    </div>
+    <div id="timer" style="display:none;">10:00</div>
+  </header>
 
-  <div id="lockScreen" class="card">
+  <div id="lockScreen" class="card hidden">
     <h2>🔒 Bài chưa mở</h2>
-    <p id="lockMsg"></p>
+    <p id="lockMsg" class="note"></p>
   </div>
 
   <div id="startScreen" class="card">
-    <p>Nhập tên của em (đúng như trong danh sách lớp) để bắt đầu bài test (10 phút, 30 câu: 20 trắc nghiệm + 10 tự luận).</p>
-    <input type="text" id="sname" placeholder="Họ và tên học sinh">
-    <br><button onclick="startQuiz()">Bắt đầu làm bài</button>
+    <p class="note">Nhập tên của em (đúng như trong danh sách lớp) để bắt đầu bài test (10 phút, 30 câu: 20 trắc nghiệm + 10 tự luận).</p>
+    <label for="sname">Họ và tên học sinh</label>
+    <input type="text" id="sname" placeholder="Ví dụ: Nguyễn Văn A">
+    <button class="btn" onclick="startQuiz()">Bắt đầu làm bài</button>
   </div>
 
-  <div id="timer" style="display:none;">10:00</div>
-
-  <div id="quizBody">
-    <div class="partlabel">PHẦN A – TRẮC NGHIỆM (20 câu)</div>
-    <div id="mcContainer"></div>
-    <div class="partlabel">PHẦN B – TỰ LUẬN (10 câu)</div>
-    <div id="essayContainer"></div>
-    <div class="card" style="text-align:center;">
-      <button onclick="submitQuiz()">Nộp bài</button>
+  <div id="quizBody" class="hidden">
+    <div class="card">
+      <div class="progress-label">Tiến độ làm bài</div>
+      <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+      <div class="qtopic" id="q-topic"></div>
+      <div class="qtext" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div id="q-essay-wrap" class="hidden">
+        <textarea id="q-essay-input" placeholder="Viết câu trả lời tại đây..."></textarea>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-secondary" id="prev-btn">← Câu trước</button>
+        <button class="btn" id="next-btn">Câu tiếp →</button>
+      </div>
+      <div class="grid-nav" id="grid-nav"></div>
+      <button class="btn btn-submit" id="submit-btn">Nộp bài</button>
     </div>
   </div>
 
-  <div id="resultScreen" class="card">
+  <div id="resultScreen" class="card hidden">
     <h2>✅ Đã nộp bài — Đạt yêu cầu!</h2>
-    <div class="score-box" id="scoreLine"></div>
+    <div class="score-box" id="scoreBig"></div>
+    <div class="status pass">ĐẠT YÊU CẦU</div>
+    <p class="note" id="scoreDetail"></p>
     <p class="note">Kết quả đã được gửi cho giáo viên. Bài làm không hiển thị đáp án ngay.</p>
     <div class="attempts" id="attemptsLine"></div>
   </div>
 
-  <div id="retryScreen" class="card">
+  <div id="retryScreen" class="card hidden">
     <h2>❌ Chưa đạt yêu cầu — Cần làm lại toàn bộ bài</h2>
-    <div class="score-box fail" id="retryScoreLine"></div>
+    <div class="score-box fail" id="retryScoreBig"></div>
+    <div class="status fail">CHƯA ĐẠT</div>
+    <p class="note" id="retryScoreDetail"></p>
     <p class="note">Trắc nghiệm cần đúng tối thiểu 18/20 câu và tự luận tối đa sai 1 câu mới đạt yêu cầu.</p>
     <div class="attempts" id="retryAttemptsLine"></div>
-    <button onclick="location.reload()">Làm lại bài</button>
+    <button class="btn" onclick="location.reload()">Làm lại bài</button>
   </div>
 </div>
 
@@ -85,7 +160,10 @@ const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzuQQVoH4IaO_no-dkWB
 const UNIT_NAME = "Unit 1";
 const BAI_NAME = "Bai 1";
 
+const TOTAL = MC.length + ESSAY.length; // 30
 let selected = new Array(MC.length).fill(null);
+let essayAnswers = new Array(ESSAY.length).fill('');
+let current = 0; // 0..TOTAL-1 (0-19 = MC, 20-29 = ESSAY)
 let timeLeft = 600;
 let timerId = null;
 let submitted = false;
@@ -101,14 +179,14 @@ function checkLock(){
   const lockMsg = document.getElementById('lockMsg');
   if(!prevDate){
     lockMsg.textContent = 'Em cần hoàn thành Bài ' + (DAY_NO - 1) + ' (đạt yêu cầu) trước khi làm bài này.';
-    lockScreen.style.display = 'block';
-    document.getElementById('startScreen').style.display = 'none';
+    lockScreen.classList.remove('hidden');
+    document.getElementById('startScreen').classList.add('hidden');
     return false;
   }
   if(prevDate === todayStr()){
     lockMsg.textContent = 'Bài này sẽ mở vào ngày mai, sau khi em đã hoàn thành Bài ' + (DAY_NO - 1) + ' hôm nay.';
-    lockScreen.style.display = 'block';
-    document.getElementById('startScreen').style.display = 'none';
+    lockScreen.classList.remove('hidden');
+    document.getElementById('startScreen').classList.add('hidden');
     return false;
   }
   return true;
@@ -129,11 +207,11 @@ function startQuiz(){
   const name = document.getElementById('sname').value.trim();
   if(!name){ alert('Vui lòng nhập tên trước khi bắt đầu.'); return; }
   studentName = name;
-  document.getElementById('startScreen').style.display='none';
+  document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('timer').style.display='block';
-  document.getElementById('quizBody').style.display='block';
-  renderMC();
-  renderEssay();
+  document.getElementById('quizBody').classList.remove('hidden');
+  buildGridNav();
+  renderCurrent();
   timerId = setInterval(tick, 1000);
 }
 
@@ -142,42 +220,106 @@ function tick(){
   const m = Math.floor(timeLeft/60), s = timeLeft%60;
   const el = document.getElementById('timer');
   el.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-  if(timeLeft<=60) el.classList.add('warn');
+  if(timeLeft<=300) el.classList.add('danger');
   if(timeLeft<=0){ clearInterval(timerId); submitQuiz(); }
 }
 
-function renderMC(){
-  const c = document.getElementById('mcContainer');
-  c.innerHTML = '';
-  MC.forEach((q,i)=>{
-    const div = document.createElement('div');
-    div.className='card';
-    let optsHtml='';
-    q.options.forEach((opt,j)=>{
-      optsHtml += `<div class="opt" id="opt-${i}-${j}" onclick="choose(${i},${j})">${opt}</div>`;
+function buildGridNav(){
+  const nav = document.getElementById('grid-nav');
+  nav.innerHTML = '';
+  for(let i=0;i<TOTAL;i++){
+    const d = document.createElement('div');
+    d.textContent = i+1;
+    d.addEventListener('click', () => { saveEssayCurrent(); current = i; renderCurrent(); });
+    nav.appendChild(d);
+  }
+}
+
+function refreshGridNav(){
+  const nav = document.getElementById('grid-nav');
+  [...nav.children].forEach((d, i) => {
+    const done = i < MC.length ? (selected[i] !== null) : (essayAnswers[i - MC.length].trim() !== '');
+    d.classList.toggle('done', done);
+    d.classList.toggle('current', i === current);
+  });
+}
+
+function updateProgress(){
+  let answered = 0;
+  selected.forEach(s => { if(s !== null) answered++; });
+  essayAnswers.forEach(t => { if(t.trim() !== '') answered++; });
+  document.getElementById('progress-bar').style.width = `${(answered/TOTAL)*100}%`;
+}
+
+function saveEssayCurrent(){
+  if(current >= MC.length){
+    const idx = current - MC.length;
+    const input = document.getElementById('q-essay-input');
+    if(input) essayAnswers[idx] = input.value;
+  }
+}
+
+function renderCurrent(){
+  const optWrap = document.getElementById('q-options');
+  const essayWrap = document.getElementById('q-essay-wrap');
+  const topicEl = document.getElementById('q-topic');
+  const textEl = document.getElementById('q-text');
+
+  if(current < MC.length){
+    const q = MC[current];
+    topicEl.textContent = `Câu ${current+1}/${TOTAL} — Trắc nghiệm collocation`;
+    textEl.innerHTML = q.q.replace(/_+/g, '<b>____</b>');
+    essayWrap.classList.add('hidden');
+    optWrap.classList.remove('hidden');
+    optWrap.innerHTML = '';
+    const letters = ['A','B','C','D'];
+    q.options.forEach((opt, idx) => {
+      const div = document.createElement('div');
+      div.className = 'opt' + (selected[current] === idx ? ' selected' : '');
+      div.innerHTML = `<span class="letter">${letters[idx]}</span><span>${opt}</span>`;
+      div.addEventListener('click', () => {
+        selected[current] = idx;
+        renderCurrent();
+      });
+      optWrap.appendChild(div);
     });
-    div.innerHTML = `<div class="qnum">Câu ${i+1}. ${q.q}</div>${optsHtml}`;
-    c.appendChild(div);
-  });
+  } else {
+    const idx = current - MC.length;
+    const q = ESSAY[idx];
+    topicEl.textContent = `Câu ${current+1}/${TOTAL} — Tự luận`;
+    textEl.innerHTML = q.q;
+    optWrap.classList.add('hidden');
+    essayWrap.classList.remove('hidden');
+    const input = document.getElementById('q-essay-input');
+    input.value = essayAnswers[idx];
+    input.oninput = () => { essayAnswers[idx] = input.value; refreshGridNav(); updateProgress(); };
+  }
+
+  updateProgress();
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').textContent = current === TOTAL - 1 ? 'Câu cuối' : 'Câu tiếp →';
+  refreshGridNav();
 }
 
-function choose(i,j){
-  if(submitted) return;
-  selected[i]=j;
-  document.querySelectorAll(`[id^="opt-${i}-"]`).forEach(el=>el.classList.remove('selected'));
-  document.getElementById(`opt-${i}-${j}`).classList.add('selected');
-}
+document.getElementById('prev-btn').addEventListener('click', () => {
+  saveEssayCurrent();
+  if(current > 0){ current--; renderCurrent(); }
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+  saveEssayCurrent();
+  if(current < TOTAL - 1){ current++; renderCurrent(); }
+});
 
-function renderEssay(){
-  const c = document.getElementById('essayContainer');
-  c.innerHTML = '';
-  ESSAY.forEach((q,i)=>{
-    const div = document.createElement('div');
-    div.className='card';
-    div.innerHTML = `<div class="qnum">Câu ${21+i}. ${q.q}</div><textarea id="essay-${i}" placeholder="Viết câu trả lời tại đây..."></textarea>`;
-    c.appendChild(div);
-  });
-}
+document.getElementById('submit-btn').addEventListener('click', () => {
+  saveEssayCurrent();
+  const unansweredMC = selected.filter(a => a === null).length;
+  const unansweredEssay = essayAnswers.filter(t => t.trim() === '').length;
+  const unanswered = unansweredMC + unansweredEssay;
+  if(unanswered > 0){
+    if(!confirm(`Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc muốn nộp bài không?`)) return;
+  }
+  submitQuiz();
+});
 
 function normalize(s){
   return (s||'').toLowerCase().normalize('NFC');
@@ -185,6 +327,7 @@ function normalize(s){
 
 function submitQuiz(){
   if(submitted) return;
+  saveEssayCurrent();
   submitted = true;
   clearInterval(timerId);
 
@@ -198,16 +341,15 @@ function submitQuiz(){
 
   let correctEssay=0, answeredEssay=0;
   ESSAY.forEach((q,i)=>{
-    const v = document.getElementById('essay-'+i);
-    const txt = normalize(v ? v.value : '');
+    const txt = normalize(essayAnswers[i]);
     if(txt.trim().length>0) answeredEssay++;
     if(txt.includes(normalize(q.term))) correctEssay++;
   });
 
   const attempts = incAttempts(studentName);
   const passed = (correctMC >= 18) && (correctEssay >= 9);
+  const totalCorrect = correctMC + correctEssay;
 
-  // Gửi kết quả về hệ thống của giáo viên (Google Sheet + email)
   if(WEBAPP_URL && WEBAPP_URL.indexOf('http') === 0){
     fetch(WEBAPP_URL, {
       method: 'POST',
@@ -225,18 +367,20 @@ function submitQuiz(){
     }).catch(()=>{});
   }
 
-  document.getElementById('quizBody').style.display='none';
+  document.getElementById('quizBody').classList.add('hidden');
   document.getElementById('timer').style.display='none';
 
   if(passed){
     localStorage.setItem('gs9_u1_completed_test' + DAY_NO, todayStr());
-    document.getElementById('resultScreen').style.display='block';
-    document.getElementById('scoreLine').innerHTML =
+    document.getElementById('resultScreen').classList.remove('hidden');
+    document.getElementById('scoreBig').textContent = `${totalCorrect}/${TOTAL}`;
+    document.getElementById('scoreDetail').innerHTML =
       `Trắc nghiệm: đúng ${correctMC}/20 câu (đã làm ${answeredMC}/20)<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
     document.getElementById('attemptsLine').textContent = 'Số lần làm bài: ' + attempts;
   } else {
-    document.getElementById('retryScreen').style.display='block';
-    document.getElementById('retryScoreLine').innerHTML =
+    document.getElementById('retryScreen').classList.remove('hidden');
+    document.getElementById('retryScoreBig').textContent = `${totalCorrect}/${TOTAL}`;
+    document.getElementById('retryScoreDetail').innerHTML =
       `Trắc nghiệm: đúng ${correctMC}/20 câu (cần ≥18)<br>Tự luận: đã nộp ${answeredEssay}/10 câu`;
     document.getElementById('retryAttemptsLine').textContent = 'Số lần đã làm: ' + attempts;
   }
